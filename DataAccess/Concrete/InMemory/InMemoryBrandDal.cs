@@ -3,44 +3,72 @@ using Entities.Concrete;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 
 namespace DataAccess.Concrete.InMemory
 {
     public class InMemoryBrandDal : IBrandDal
     {
-        List<Brand> _brands;
+        /*IEntityRepository interfaceni yazdığımız için
+        * asaidaki kodları yenisi olan asaidakilerle
+        * degistirdik*/
+        //List<Brand> _brands;
 
-        public InMemoryBrandDal()
+        //public InMemoryBrandDal()
+        //{
+        //    _brands = new List<Brand> { 
+        //    new Brand{BrandId=1,Name="Mercedes",Adress="Berlin"},
+        //    new Brand{BrandId=2,Name="BMW",Adress="Frankfurt"},
+        //    new Brand{BrandId=3,Name="Renault",Adress="Paris"},
+        //    new Brand{BrandId=4,Name="Ferrrari",Adress="Milano"},
+        //    };
+        //}
+
+        //public void Add(Brand brand )
+        //{
+        //    _brands.Add(brand); 
+        //}
+
+        //public void Delete(Brand brand )
+        //{
+        //    _brands.Remove(_brands.SingleOrDefault(b => b.BrandId == brand.BrandId));
+        //}
+
+        //public List<Brand> GetAll()
+        //{
+        //    return _brands;
+        //}
+
+        //public void Update(Brand brand )
+        //{
+        //   Brand brandToUpdate= _brands.SingleOrDefault(b => b.BrandId == brand.BrandId);
+        //    brandToUpdate.Name = brand.Name;
+        //    brandToUpdate.Adress = brand.Adress;
+        //}
+        public void Add(Brand entity)
         {
-            _brands = new List<Brand> { 
-            new Brand{BrandId=1,BrandName="Mercedes",BrandAdress="Berlin"},
-            new Brand{BrandId=2,BrandName="BMW",BrandAdress="Frankfurt"},
-            new Brand{BrandId=3,BrandName="Renault",BrandAdress="Paris"},
-            new Brand{BrandId=4,BrandName="Ferrrari",BrandAdress="Milano"},
-            };
+            throw new NotImplementedException();
         }
 
-        public void Add(Brand brand )
+        public void Delete(Brand entity)
         {
-            _brands.Add(brand); 
+            throw new NotImplementedException();
         }
 
-        public void Delete(Brand brand )
+        public Brand Get(Expression<Func<Brand, bool>> filter)
         {
-            _brands.Remove(_brands.SingleOrDefault(b => b.BrandId == brand.BrandId));
+            throw new NotImplementedException();
         }
 
-        public List<Brand> GetAll()
+        public List<Brand> GetAll(Expression<Func<Brand, bool>> filter = null)
         {
-            return _brands;
+            throw new NotImplementedException();
         }
 
-        public void Update(Brand brand )
+        public void Update(Brand entity)
         {
-           Brand brandToUpdate= _brands.SingleOrDefault(b => b.BrandId == brand.BrandId);
-            brandToUpdate.BrandName = brand.BrandName;
-            brandToUpdate.BrandAdress = brand.BrandAdress;
+            throw new NotImplementedException();
         }
     }
 }

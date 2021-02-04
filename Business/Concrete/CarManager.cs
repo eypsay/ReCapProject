@@ -25,15 +25,32 @@ namespace Business.Concrete
         {
             _iCarDal.Delete(car);
         }
-
+        public void Update(Car car)
+        {
+            _iCarDal.Update(car);
+        }
         public List<Car> GetAll()
         {
            return  _iCarDal.GetAll();   
         }
 
-        public void Update(Car car)
+        public List<Car> GetAllBrandId(int id)
         {
-            _iCarDal.Update(car);
+            return _iCarDal.GetAll(c => c.BrandId == id);
+        }
+
+        public List<Car> GetByDailyPrice(decimal min, decimal max)
+        {
+            return _iCarDal.GetAll(c => c.DailyPrice <= max && c.DailyPrice >= min);        }
+
+        public Car Get(int carId)
+        {
+            return _iCarDal.Get(c => c.CarId==carId);
+        }
+
+        public Car Get()
+        {
+            throw new NotImplementedException();
         }
     }
 }

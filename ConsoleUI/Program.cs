@@ -1,4 +1,5 @@
 ﻿using Business.Concrete;
+using DataAccess.Concrete.EntityFramework;
 using DataAccess.Concrete.InMemory;
 using Entities.Concrete;
 using System;
@@ -9,7 +10,8 @@ namespace ConsoleUI
     {
         static void Main(string[] args)
         {
-            CarManager carManager = new CarManager(new InMemoryCarDal());
+            //CarManager carManager = new CarManager(new InMemoryCarDal());
+            CarManager carManager = new CarManager(new EfCarDal());
 
             BrandManager brandManager = new BrandManager(new InMemoryBrandDal());
 
@@ -18,7 +20,7 @@ namespace ConsoleUI
 
             do
             {
-               
+
                 showMenu();
                 choose = (byte)UInt16.Parse(Console.ReadLine());
                 switch (choose)
@@ -38,20 +40,22 @@ namespace ConsoleUI
                     case 4:
                         Console.Clear();
                         deleteCar(carManager); break;
-                     case 5:
+                    case 5:
                         Console.Clear();
-                        getAllBrand(brandManager);break;
+                        getAllBrand(brandManager); break;
                     case 6:
                         Console.Clear();
-                        addNewBrand(brandManager);break;
+                        addNewBrand(brandManager); break;
                     case 7:
                         Console.Clear();
-                        updateBrandInfo(brandManager);break;
+                        updateBrandInfo(brandManager); break;
                     case 8:
                         Console.Clear();
-                        deleteBrand(brandManager);break;
+                        deleteBrand(brandManager); break;
 
-                            
+                    case 10:
+                        Console.Clear();
+                        getByDailyPrice(carManager); break;
                     case 0: break;
                     default: Console.WriteLine("Wrong Chooice"); break;
                 }
@@ -72,6 +76,7 @@ namespace ConsoleUI
                 "6-Add a New Brand\n" +
                 "7-Update Brand's Info\n" +
                 "8-Delete Brand'\n" +
+                "10-Daily Price'\n" +
                 "0-Exit");
             Console.WriteLine("Please Select an Operation:");
         }
@@ -99,8 +104,11 @@ namespace ConsoleUI
             //});
 
             Car car1 = new Car();
-            Console.WriteLine("Enter Car ID:");
-            car1.CarId = UInt16.Parse(Console.ReadLine());
+            /* databasede autoincrement yapigim icin kapattım
+            //
+            //Console.WriteLine("Enter Car ID:");
+            //car1.CarId = UInt16.Parse(Console.ReadLine());
+            */
             Console.WriteLine("Enter Brand ID:");
             car1.BrandId = UInt16.Parse(Console.ReadLine());
             Console.WriteLine("Enter Color ID:");
@@ -125,10 +133,11 @@ namespace ConsoleUI
             //    Description = "Audi",
             //    ModelYear = 2001
             //});
-
+            getAllCar(carManager);
             Car car1 = new Car();
-            Console.WriteLine("Enter Car ID:");
+            Console.WriteLine("Please Select Car ID to Update :");
             car1.CarId = UInt16.Parse(Console.ReadLine());
+            carManager.Get(car1.CarId);
             Console.WriteLine("Enter Brand ID:");
             car1.BrandId = UInt16.Parse(Console.ReadLine());
             Console.WriteLine("Enter Color ID:");
@@ -147,10 +156,23 @@ namespace ConsoleUI
             Car car1 = new Car();
             Console.WriteLine("Enter Car ID to DELETE:");
             car1.CarId = UInt16.Parse(Console.ReadLine());
-            
+
             carManager.Delete(car1);
         }
-
+        static void getByDailyPrice(CarManager carManager) {
+            decimal dailyMin, dailyMax;
+            Console.WriteLine("Enter Min Daily Price:");
+            dailyMin = decimal.Parse(Console.ReadLine());
+            Console.WriteLine("Enter Max Daily Price:");
+            dailyMax = decimal.Parse(Console.ReadLine());
+            Console.WriteLine("\n");
+            Console.WriteLine("CarID  BrandID  ColorID Description DailyPrice");
+            foreach (var item in carManager.GetByDailyPrice(dailyMin,dailyMax))
+            {
+                Console.WriteLine(item.CarId + "\t " + item.BrandId + "\t " + item.ColorId + "\t " + item.Description + "\t\t " + item.DailyPrice);
+            }
+    Console.WriteLine("\n");
+        }
         ///////////BRAND METHODS
         static void getAllBrand(BrandManager brandManager)
         {
@@ -158,7 +180,7 @@ namespace ConsoleUI
             Console.WriteLine("BrandID  BrandName BrandAddress");
             foreach (var item in brandManager.GetAll())
             {
-                Console.WriteLine(item.BrandId + "\t " + item.BrandName + "\t " + item.BrandAdress);
+                Console.WriteLine(item.BrandId + "\t " + item.Name + "\t " + item.Adress);
             }
             Console.WriteLine("\n");
         }
@@ -179,9 +201,9 @@ namespace ConsoleUI
             Console.WriteLine("Enter Brand ID:");
             brand1.BrandId = UInt16.Parse(Console.ReadLine());
             Console.WriteLine("Enter Brand Name:");
-            brand1.BrandName = Console.ReadLine();
+            brand1.Name = Console.ReadLine();
             Console.WriteLine("Enter Brand Address:");
-            brand1.BrandAdress = Console.ReadLine();
+            brand1.Adress = Console.ReadLine();
 
             brandManager.Add(brand1);
         }
@@ -202,9 +224,9 @@ namespace ConsoleUI
             Console.WriteLine("Enter Brand ID:");
             brand1.BrandId = UInt16.Parse(Console.ReadLine());
             Console.WriteLine("Enter Brand Name:");
-            brand1.BrandName = Console.ReadLine();
+            brand1.Name = Console.ReadLine();
             Console.WriteLine("Enter Brand Address:");
-            brand1.BrandAdress = Console.ReadLine();
+            brand1.Adress = Console.ReadLine();
 
             brandManager.Update(brand1);
         }
