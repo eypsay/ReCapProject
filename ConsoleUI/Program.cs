@@ -10,7 +10,7 @@ namespace ConsoleUI
     {
         static void Main(string[] args)
         {
-            //CarManager carManager = new CarManager(new InMemoryCarDal());
+            //CarManager carManager = new  CarManager(new InMemoryCarDal());
             //BrandManager brandManager = new BrandManager(new InMemoryBrandDal());
 
             CarManager carManager = new CarManager(new EfCarDal());
