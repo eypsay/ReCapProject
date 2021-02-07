@@ -1,5 +1,7 @@
-﻿using DataAccess.Abstract;
+﻿using Core.DataAccess.EntityFramework;
+using DataAccess.Abstract;
 using Entities.Concrete;
+using Entities.DTOs;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -9,65 +11,29 @@ using System.Text;
 
 namespace DataAccess.Concrete.EntityFramework
 {
-    public class EfCarDal : ICarDal
+    public class EfCarDal : EfEntityRepositoryBase<Car, CarContext>, ICarDal
     {
-        public void Add(Car entity)
+        public List<CarDetailDto> GetCarDetails()
         {
-            //Bu codları refactor edeceğiz
-            //bu using nesneyi oluştur ve using bitince anında bellekten kaldır   
-            //IDisposable pattern implementation of C# bu yapu C# özgüdür
-            using (CarContext context =new CarContext ())
+            using (CarContext context=new CarContext ())
             {
-                var addedEntity = context.Entry(entity);//benim gönderdiğim entityle eşleştir yani refaransı yakalama işlemi
-                addedEntity.State = EntityState.Added;
-                context.SaveChanges();
+                var result = from c in context.Cars
+                             join cus in context.Customers on c.CustomerId equals cus.CustomerId
+                             join b in context.Brands on c.BrandId equals b.BrandId
+                             join col in context.Colors on c.ColorId equals col.ColorId
+                             select new CarDetailDto
+                             {
+                                 CarId = c.CarId,
+                                 CarName = b.Name,
+                                 Payment = cus.Payment,
+                                 CustomerName = cus.CustomerName,
+                                 DailyPrice =c.DailyPrice,
+                                 ColorName =col.Name,
+                             };
+                return result.ToList();
             }
-        }
 
-        public void Delete(Car entity)
-        {
-            using (CarContext context = new CarContext())
-            {
-                var deletedEntity = context.Entry(entity);//benim gönderdiğim entityle eşleştir yani refaransı yakalama işlemi
-                deletedEntity.State = EntityState.Deleted;
-                context.SaveChanges();
-            }
-        }
-
-        public Car Get(Expression<Func<Car, bool>> filter)
-        {//burası tek data getirir
-            using (CarContext context  =new CarContext ())
-            {
-                return context.Set<Car>().SingleOrDefault(filter);
-            }
-        }
-
-        public List<Car> GetAll(Expression<Func<Car, bool>> filter = null)
-        {//Expression<Func<Car, bool>> : bu gelecek olan lamda dir
-            using (CarContext context = new CarContext())
-            {
-                //select * from car =  context.Set<Car>() ve bunun sonucunu listeye cevir
-                return filter == null ? context.Set<Car>().ToList() : context.Set<Car>().Where(filter).ToList();
-            }
-        }
-
-        public void Update(Car entity)
-        {
-            using (CarContext context = new CarContext())
-            {
-                try
-                {
-                    var updatedEntity = context.Entry(entity);//benim gönderdiğim entityle eşleştir yani refaransı yakalama işlemi
-                    updatedEntity.State = EntityState.Modified;
-                    context.SaveChanges();
-                }
-                catch (Exception e)
-                {
-
-                    Console.WriteLine("There is no Car Id. Update CANCELLED:");
-                }
-                
-            }
+          
         }
     }
 }
