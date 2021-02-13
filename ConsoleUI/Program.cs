@@ -264,13 +264,27 @@ namespace ConsoleUI
 
             static void getAllCar(CarManager carManager)
             {
-                Console.WriteLine("\n");
-                Console.WriteLine("CarID  BrandID  ColorID Description DailyPrice");
-                foreach (var item in carManager.GetAll())
+                var result = carManager.GetAll();
+                if(result.Success)
                 {
-                    Console.WriteLine(item.CarId + "\t " + item.BrandId + "\t " + item.ColorId + "\t " + item.Description + "\t\t " + item.DailyPrice);
+                    foreach (var item in carManager.GetAll().Data)
+                     {
+                   Console.WriteLine(item.CarId + "\t " + item.BrandId + "\t " + item.ColorId + "\t " + item.Description + "\t\t " + item.DailyPrice);
+                      }
                 }
-               
+                else
+                {
+                    Console.WriteLine(result.Message);
+                }
+
+                ////bunun yerine yukarda kodları yazdık
+                //Console.WriteLine("\n");
+                //Console.WriteLine("CarID  BrandID  ColorID Description DailyPrice");
+                //foreach (var item in carManager.GetAll().Data)
+                //{
+                //    Console.WriteLine(item.CarId + "\t " + item.BrandId + "\t " + item.ColorId + "\t " + item.Description + "\t\t " + item.DailyPrice);
+                //}
+
 
             }
             static void addNewCar(CarManager carManager)
@@ -324,7 +338,7 @@ namespace ConsoleUI
                 Car car1 = new Car();
                 Console.WriteLine("Please Select Car ID to Update :");
                 car1.CarId = UInt16.Parse(Console.ReadLine());
-                carManager.Get(car1.CarId);
+                carManager.GetById(car1.CarId);
                 Console.WriteLine("Enter Brand ID:");
                 car1.BrandId = UInt16.Parse(Console.ReadLine());
                 Console.WriteLine("Enter Color ID:");
@@ -359,7 +373,7 @@ namespace ConsoleUI
                 dailyMax = decimal.Parse(Console.ReadLine());
                 Console.WriteLine("\n");
                 Console.WriteLine("CarID  BrandID  ColorID Description DailyPrice");
-                foreach (var item in carManager.GetByDailyPrice(dailyMin, dailyMax))
+                foreach (var item in carManager.GetByDailyPrice(dailyMin, dailyMax).Data)
                 {
                     Console.WriteLine(item.CarId + "\t " + item.BrandId + "\t " + item.ColorId + "\t " + item.Description + "\t\t " + item.DailyPrice);
                 }
@@ -372,7 +386,7 @@ namespace ConsoleUI
             {
                 Console.WriteLine("\n");
                 Console.WriteLine("CarName  CustomerName  Color         Payment   DailyPrice   CarId");
-                foreach (var carDetail in carManager.GetCarDetails())
+                foreach (var carDetail in carManager.GetCarDetails().Data)
                 {
                     Console.WriteLine(carDetail.CarName + "\t " + carDetail.CustomerName + "\t " + carDetail.ColorName + "\t " + carDetail.Payment + "\t " + carDetail.DailyPrice + "\t " + carDetail.CarId);
                 }
