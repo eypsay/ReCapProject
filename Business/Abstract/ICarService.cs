@@ -19,7 +19,7 @@ namespace Business.Abstract
         // Car Get();
         IDataResult<Car> GetById(int carId);
       
-
+        //RESTFULL -->HTTP -->
 
     }
 }
