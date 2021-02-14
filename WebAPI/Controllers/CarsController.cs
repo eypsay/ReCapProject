@@ -76,7 +76,7 @@ namespace WebAPI.Controllers
             return BadRequest(result);
 
         }
-
+        //güncelleme icin HttpPut, silme icin HttpDelete kullanılabilir fakat post da bu islemleri yapar
 
     }
 }
