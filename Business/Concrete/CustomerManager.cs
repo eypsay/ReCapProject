@@ -1,4 +1,6 @@
 ﻿using Business.Abstract;
+using Business.Constants;
+using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
 using System;
@@ -26,29 +28,56 @@ namespace Business.Concrete
        
 
         //Is kodlari buraya yazılacak
-        public List<Customer> GetAll()
+        public IDataResult< List<Customer>> GetAll()
         {
-            return _customerDal.GetAll();
+            if (DateTime.Now.Hour == 20)
+            {
+                return new ErrorDataResult<List<Customer>>(Messages.MaintenanceTime);
+            }
+
+                return new SuccessDataResult<List<Customer>>( _customerDal.GetAll(),Messages.CustomerListed);
         }
 
-        public Customer GetById(int customerId)
+        public IDataResult<Customer> GetById(int customerId)
         {
-            return _customerDal.Get(cus => cus.CustomerId == customerId);
+            if (DateTime.Now.Hour == 20)
+            {
+                return new ErrorDataResult<Customer>(Messages.MaintenanceTime);
+            }
+
+            return new SuccessDataResult<Customer>( _customerDal.Get(cus => cus.CustomerId == customerId),Messages.CustomerListed);
             
         }
 
-        public void Update(Customer customer)
+        public IResult Update(Customer customer)
         {
-            _customerDal.Update(customer);
+            if (customer.CustomerName.Length < 2)
+            {
+                return new ErrorResult(Messages.CustomerNameInvalid);
+            }
+                _customerDal.Update(customer);
+            return new SuccessResult(Messages.CustomerUpdated);
         }
-        public void Add(Customer customer)
+        public IResult Add(Customer customer)
         {
-            _customerDal.Add(customer);
+            if (customer.CustomerName.Length < 2)
+            {
+                return new ErrorResult(Messages.CustomerNameInvalid);
+            }
+                _customerDal.Add(customer);
+
+            return new SuccessResult(Messages.CustomerAdded);
         }
 
-        public void Delete(Customer customer)
+        public IResult Delete(Customer customer)
         {
-            _customerDal.Delete(customer);
+            if (customer.CustomerName.Length < 2)
+            {
+                return new ErrorResult(Messages.CustomerNameInvalid);
+            }
+                _customerDal.Delete(customer);
+
+            return new SuccessResult(Messages.ColorUpdated);
         }
     }
 }

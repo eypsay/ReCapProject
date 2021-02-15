@@ -267,7 +267,7 @@ namespace ConsoleUI
                 var result = carManager.GetAll();
                 if(result.Success)
                 {
-                    foreach (var item in carManager.GetAll().Data)
+                    foreach (var item in result.Data)
                      {
                    Console.WriteLine(item.CarId + "\t " + item.BrandId + "\t " + item.ColorId + "\t " + item.Description + "\t\t " + item.DailyPrice);
                       }
@@ -373,36 +373,65 @@ namespace ConsoleUI
                 dailyMax = decimal.Parse(Console.ReadLine());
                 Console.WriteLine("\n");
                 Console.WriteLine("CarID  BrandID  ColorID Description DailyPrice");
-                foreach (var item in carManager.GetByDailyPrice(dailyMin, dailyMax).Data)
-                {
-                    Console.WriteLine(item.CarId + "\t " + item.BrandId + "\t " + item.ColorId + "\t " + item.Description + "\t\t " + item.DailyPrice);
-                }
 
-                Console.WriteLine("\n\nFiltered by min {0} and max {1} Daily Price", dailyMin, dailyMax);
+                //foreach (var item in carManager.GetByDailyPrice(dailyMin, dailyMax).Data)
+
+                var result = carManager.GetByDailyPrice(dailyMin, dailyMax);
+                if (result.Success)
+                {
+                    foreach (var item in result.Data)
+                    {
+                        Console.WriteLine(item.CarId + "\t " + item.BrandId + "\t " + item.ColorId + "\t " + item.Description + "\t\t " + item.DailyPrice);
+                    }
+
+                    Console.WriteLine("\n\nFiltered by min {0} and max {1} Daily Price", dailyMin, dailyMax);
+                }
+                else
+                {
+                    Console.WriteLine(result.Message);
+                }
              
             }
 
             static void getCarDetails(CarManager carManager)
             {
-                Console.WriteLine("\n");
-                Console.WriteLine("CarName  CustomerName  Color         Payment   DailyPrice   CarId");
-                foreach (var carDetail in carManager.GetCarDetails().Data)
+
+                var result = carManager.GetCarDetails();
+                if (result.Success) { 
+
+                    Console.WriteLine("\n");
+                    Console.WriteLine("CarName  CustomerName  Color         Payment   DailyPrice   CarId");
+                    foreach (var carDetail in result.Data)
+                    {
+                        Console.WriteLine(carDetail.CarName + "\t " + carDetail.CustomerName + "\t " + carDetail.ColorName + "\t " + carDetail.Payment + "\t " + carDetail.DailyPrice + "\t " + carDetail.CarId);
+                    }
+                }
+                else
                 {
-                    Console.WriteLine(carDetail.CarName + "\t " + carDetail.CustomerName + "\t " + carDetail.ColorName + "\t " + carDetail.Payment + "\t " + carDetail.DailyPrice + "\t " + carDetail.CarId);
+                    Console.WriteLine(result.Message);
                 }
 
-               
+
             }
             ///////////BRAND METHODS 
             static void getAllBrand(BrandManager brandManager)
             {
                 Console.WriteLine("\n");
                 Console.WriteLine("BrandID  BrandName BrandAddress");
-                foreach (var item in brandManager.GetAll())
-                {
-                    Console.WriteLine(item.BrandId + "\t " + item.Name + "\t " + item.Adress);
+                //  foreach (var item in brandManager.GetAll())//IResult kısmını ekledikten sonra asgıdaki kod ile degistirdim
+                var result = brandManager.GetAll();
+                if (result.Success) { 
+                    foreach (var item in result.Data)
+                    {
+                        Console.WriteLine(item.BrandId + "\t " + item.Name + "\t " + item.Adress);
+                    }
                 }
-               
+               else
+                {
+                    Console.WriteLine(result.Message);
+                }
+
+
             }
             static void addNewBrand(BrandManager brandManager)
             {
@@ -465,13 +494,23 @@ namespace ConsoleUI
             ///////////CUSTOMER METHODS
             static void getAllCustomer(CustomerManager customerManager)
             {
-                Console.WriteLine("\n");
-                Console.WriteLine("CustomerID  CarID  Payment PaymetType PaymentDate");
-                foreach (var customer in customerManager.GetAll())
-                {
-                    Console.WriteLine(customer.CustomerId + "\t " + customer.CustomerName + "\t " + customer.Payment + "\t " + customer.PaymetType + "\t\t " + customer.PaymentDate);
+
+                var result = customerManager.GetAll();
+                if (result.Success) { 
+                    Console.WriteLine("\n");
+                    Console.WriteLine("CustomerID  CarID  Payment PaymetType PaymentDate");
+                    //foreach (var customer in customerManager.GetAll())
+                    foreach (var customer in result.Data)
+                    {
+                        Console.WriteLine(customer.CustomerId + "\t " + customer.CustomerName + "\t " + customer.Payment + "\t " + customer.PaymetType + "\t\t " + customer.PaymentDate);
+                    }
+
                 }
-              
+                else
+                {
+                    Console.WriteLine(result.Message);
+                }
+
             }
             static void addNewCustomer(CustomerManager customerManager)
             {
@@ -543,7 +582,8 @@ namespace ConsoleUI
                 getAllCustomer(customerManager);
                 Console.WriteLine("Enter Customer ID to DELETE:");
                 customer1.CustomerId = UInt16.Parse(Console.ReadLine());
-                customer1 = customerManager.GetById(customer1.CustomerId);
+                //customer1 = customerManager.GetById(customer1.CustomerId);
+                customer1 = customerManager.GetById(customer1.CustomerId).Data;
                 customerManager.Delete(customer1);
                 
             }
@@ -553,11 +593,19 @@ namespace ConsoleUI
             ///////////Color METHODS
             static void getAllColor(ColorManager colorManager)
             {
+                var result = colorManager.GetAll();
+                if (result.Success) { 
+
                 Console.WriteLine("\n");
                 Console.WriteLine("ColorId  Name  Description");
-                foreach (var color1 in colorManager.GetAll())
+                foreach (var color1 in result.Data)
                 {
                     Console.WriteLine(color1.ColorId + "\t " + color1.Name + "\t " + color1.Description );
+                }
+                }
+                else
+                {
+                    Console.WriteLine(result.Message);
                 }
 
             }
@@ -625,7 +673,8 @@ namespace ConsoleUI
                 getAllColor(colorManager);
                 Console.WriteLine("Enter Color ID to DELETE:");
                 color1.ColorId = UInt16.Parse(Console.ReadLine());
-                color1 = colorManager.GetById(color1.ColorId);
+                // color1 = colorManager.GetById(color1.ColorId);
+                color1 = colorManager.GetById(color1.ColorId).Data;
                 colorManager.Delete(color1);
 
             }
