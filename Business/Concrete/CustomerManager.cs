@@ -45,7 +45,7 @@ namespace Business.Concrete
                 return new ErrorDataResult<Customer>(Messages.MaintenanceTime);
             }
 
-            return new SuccessDataResult<Customer>( _customerDal.Get(cus => cus.CustomerId == customerId),Messages.CustomerListed);
+            return new SuccessDataResult<Customer>( _customerDal.Get(cus => cus.Id == customerId),Messages.CustomerListed);
             
         }
 

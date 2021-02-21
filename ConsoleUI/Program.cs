@@ -18,6 +18,7 @@ namespace ConsoleUI
             BrandManager brandManager = new BrandManager(new EfBrandDal());
             CustomerManager customerManager = new CustomerManager(new EfCustomerDal());
             ColorManager colorManager = new ColorManager(new EfColorDal());
+            RentalManager rentalManager = new RentalManager(new EfRentalDal());
             byte choose = 0, op = 0;
 
 
@@ -182,6 +183,42 @@ namespace ConsoleUI
                             } while (op != 0);
                         }
                         break;
+                    case 5:
+                        {
+                            do
+                            {
+                                showRentalMenu();
+                                op = (byte)UInt16.Parse(Console.ReadLine());
+                                switch (op)
+                                {
+                                    case 1:
+                                        Console.Clear();
+                                        Console.WriteLine("\n--------RENTAL OPERATIONS MENU-----------");
+                                        getRentalCars(rentalManager);
+                                        rentalMenuInfo(); break;
+                                    case 2:
+                                        Console.Clear();
+                                        Console.WriteLine("\n--------RENTAL OPERATIONS MENU-----------");
+                                        rentNewCar(rentalManager);
+                                        rentalMenuInfo(); break;
+                                    case 3:
+                                        Console.Clear();
+                                        Console.WriteLine("\n--------RENTAL OPERATIONS MENU-----------");
+                                        updateRentCar(rentalManager);
+                                        rentalMenuInfo(); break;
+                                    case 4:
+                                        Console.Clear();
+                                        Console.WriteLine("\n--------RENTAL OPERATIONS MENU-----------");
+                                        deleteRentCar(rentalManager);
+                                        rentalMenuInfo(); break;
+
+                                    case 0: break;
+                                    default: Console.WriteLine("Wrong Chooice"); break;
+                                }
+
+                            } while (op != 0);
+                        }
+                        break;
 
 
                     case 0: break;
@@ -202,7 +239,8 @@ namespace ConsoleUI
 
                     "2-BRAND OPERATIONS\n" +
                     "3-CUSTOMER OPERATIONS\n" +
-                    "4-COLOR OPERATIONS\n\n" +
+                    "4-COLOR OPERATIONS\n" +
+                    "5-RENTAL OPERATIONS\n\n" +
                     "0-Exit");
                 Console.WriteLine("(Main Menu)Please Select an Operation:");
             }
@@ -230,7 +268,7 @@ namespace ConsoleUI
                     "4-Delete a Brand'\n\n" +
 
                     "0-Back to Main Menu");
-                Console.WriteLine("Please Select an Operation:");
+                Console.WriteLine("(Brand Menu)Please Select an Operation:");
             }
             static void showCustomerMenu()
             {
@@ -244,7 +282,7 @@ namespace ConsoleUI
                     "4-Delete a Customer'\n\n" +
 
                     "0-Back to Main Menu");
-                Console.WriteLine("Please Select an Operation:");
+                Console.WriteLine("(Customer Menu)Please Select an Operation:");
             }
             static void showColorMenu()
             {
@@ -258,9 +296,23 @@ namespace ConsoleUI
                     "4-Delete a Color'\n\n" +
 
                     "0-Back to Main Menu");
-                Console.WriteLine("Please Select an Operation:");
+                Console.WriteLine("(Color Menu)Please Select an Operation:");
             }
 
+            static void showRentalMenu()
+            {
+
+                Console.Clear();
+                Console.WriteLine("\n--------RENTAL OPERATIONS-----------");
+                Console.WriteLine(
+                    "1-Rental ALL INFO\n" +
+                     "2-Rent a Car\n" +
+                    "3-Rent Update Car's Info\n" +
+                    "4-Rent Delete a Car'\n\n" +
+
+                    "0-Back to Main Menu");
+                Console.WriteLine("Please Select an Operation:");
+            }
 
             static void getAllCar(CarManager carManager)
             {
@@ -502,7 +554,7 @@ namespace ConsoleUI
                     //foreach (var customer in customerManager.GetAll())
                     foreach (var customer in result.Data)
                     {
-                        Console.WriteLine(customer.CustomerId + "\t " + customer.CustomerName + "\t " + customer.Payment + "\t " + customer.PaymetType + "\t\t " + customer.PaymentDate);
+                        Console.WriteLine(customer.Id + "\t " + customer.CustomerName + "\t " + customer.Payment + "\t " + customer.PaymetType + "\t\t " + customer.PaymentDate);
                     }
 
                 }
@@ -542,7 +594,7 @@ namespace ConsoleUI
                 Console.WriteLine("Enter Payment Date:");
                 customer.PaymentDate = DateTime.Parse(Console.ReadLine());
                 customerManager.Add(customer);
-                Console.WriteLine("\n{0} Id Customer Info ADDED", customer.CustomerId);
+                Console.WriteLine("\n{0} Id Customer Info ADDED", customer.Id);
                 getAllCustomer(customerManager);
 
             }
@@ -561,8 +613,8 @@ namespace ConsoleUI
                 getAllCustomer(customerManager);
                 Customer customer = new Customer();
                 Console.WriteLine("Please Select Customer ID to Update :");
-                customer.CustomerId = UInt16.Parse(Console.ReadLine());
-                customerManager.GetById(customer.CustomerId);
+                customer.Id = UInt16.Parse(Console.ReadLine());
+                customerManager.GetById(customer.Id);
                 Console.WriteLine("Enter Customer Name:");
                 customer.CustomerName = Console.ReadLine();
                 Console.WriteLine("Enter Customer's Payment:");
@@ -581,9 +633,9 @@ namespace ConsoleUI
                 Customer customer1 = new Customer();
                 getAllCustomer(customerManager);
                 Console.WriteLine("Enter Customer ID to DELETE:");
-                customer1.CustomerId = UInt16.Parse(Console.ReadLine());
+                customer1.Id = UInt16.Parse(Console.ReadLine());
                 //customer1 = customerManager.GetById(customer1.CustomerId);
-                customer1 = customerManager.GetById(customer1.CustomerId).Data;
+                customer1 = customerManager.GetById(customer1.Id).Data;
                 customerManager.Delete(customer1);
                 
             }
@@ -679,6 +731,119 @@ namespace ConsoleUI
 
             }
 
+        }
+
+        ///////////RENTAL METHODS
+        static void getRentalCars(RentalManager rentalManager)
+        {
+            var result = rentalManager.GetAll();
+            if (result.Success)
+            {
+
+                Console.WriteLine("\n");
+                Console.WriteLine("RentId CarId  CustomerId  RentDate ReturnDate");
+                foreach (var rentcar in result.Data)
+                {
+                    Console.WriteLine(rentcar.Id + "\t " + rentcar.CarId + "\t " + rentcar.CustomerId + "\t " + rentcar.RentDate + "\t " + rentcar.ReturnDate);
+                }
+            }
+            else
+            {
+                Console.WriteLine(result.Message);
+            }
+
+        }
+        static void rentNewCar(RentalManager rentalManager)
+        {
+
+            //carManager.Add(new Car
+            //{
+            //    CarId = 6,
+            //    BrandId = 2,
+            //    ColorId = 1,
+            //    DailyPrice = 100,
+            //    Description = "Audi",
+            //    ModelYear = 2001
+            //});
+
+            Rental rent = new Rental();
+            /* databasede autoincrement yapigim icin kapattım
+            //
+            //Console.WriteLine("Enter Car ID:");
+            //car1.CarId = UInt16.Parse(Console.ReadLine());
+            */
+            //Console.WriteLine("Enter Brand ID:");
+            //customer.CustomerId = UInt16.Parse(Console.ReadLine());
+            Console.WriteLine("Enter Car ID:");
+            rent.CarId = UInt16.Parse(Console.ReadLine());
+            Console.WriteLine("Enter Customer ID:");
+            rent.CustomerId = UInt16.Parse(Console.ReadLine());
+            Console.WriteLine("Enter Rent Date:");
+            rent.RentDate =DateTime.Parse( Console.ReadLine());
+            //Console.WriteLine("Enter Return Date");
+            //rent.ReturnDate = DateTime.Parse(Console.ReadLine());
+            rent.ReturnDate = null;
+              rentalManager.Add(rent);
+
+
+        }
+        static void updateRentCar(RentalManager rentalManager)
+        {
+
+            //carManager.Add(new Car
+            //{
+            //    CarId = 6,
+            //    BrandId = 2,
+            //    ColorId = 1,
+            //    DailyPrice = 100,
+            //    Description = "Audi",
+            //    ModelYear = 2001
+            //});
+            getRentalCars(rentalManager);
+             
+                Rental rent = new Rental();
+            
+            //Console.WriteLine("Please Select Rent ID to Update :");
+            //rent.Id = UInt16.Parse(Console.ReadLine());
+            //rentalManager.GetById(rent.Id);
+            Console.WriteLine("Enter Car ID:");
+            rent.CarId = UInt16.Parse(Console.ReadLine());
+            //Console.WriteLine("Enter Customer ID:");
+            //rent.CustomerId = UInt16.Parse(Console.ReadLine());
+            //Console.WriteLine("Enter Rent Date:");
+            //rent.RentDate = DateTime.Parse(Console.ReadLine());
+            Console.WriteLine("Enter Rent Return Date:");
+            rent.ReturnDate = DateTime.Parse(Console.ReadLine());
+
+
+            // Console.WriteLine("carid:{0}, cusId:{1},rentdate:{2},returndate:{3}",result.Data.CarId,result.Data.CustomerId,result.Data.RentDate,result.Data.ReturnDate);
+
+            var result = rentalManager.GetByCarId(rent.CarId);
+            rent.Id = result.Data.Id;
+            rent.CustomerId = result.Data.CustomerId;
+            rent.RentDate = result.Data.RentDate;
+
+            rentalManager.Update(rent);
+
+        }
+
+        static void deleteRentCar(RentalManager rentalManager)
+        {
+            Rental rent = new Rental();
+            getRentalCars(rentalManager);
+            Console.WriteLine("Enter Rent ID to DELETE:");
+            rent.Id = UInt16.Parse(Console.ReadLine());
+            // color1 = colorManager.GetById(color1.ColorId);
+            rent = rentalManager.GetById(rent.Id).Data;
+            rentalManager.Delete(rent);
+
+        }
+
+        private static void rentalMenuInfo()
+        {
+            Console.WriteLine("\n");
+            Console.WriteLine("\nPress any key back to RENTAL OPERATIONS menu");
+            Console.ReadLine();
         }
 
         private static void colorMenuInfo()

@@ -18,7 +18,7 @@ namespace DataAccess.Concrete.EntityFramework
             using (CarContext context=new CarContext ())
             {
                 var result = from c in context.Cars
-                             join cus in context.Customers on c.CustomerId equals cus.CustomerId
+                             join cus in context.Customers on c.CustomerId equals cus.Id
                              join b in context.Brands on c.BrandId equals b.BrandId
                              join col in context.Colors on c.ColorId equals col.ColorId
                              select new CarDetailDto
