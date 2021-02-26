@@ -32,10 +32,29 @@ namespace WebAPI
             //Autofac,Ninject,CastleWindsor, StructreMap,LightInject,DryInject --> IoC Container altyapýs sunar
             //Biz AOP yapacagýz,
             services.AddControllers();
-            services.AddSingleton<ICarService,CarManager>();//bana arakplanda bir refrans olustur. /Icerisnde data tutumuyorsak Singleton kullanýlýr
-            //data olnalarda Add AddScoped, AddTransient kullanýlýr
-            services.AddSingleton<ICarDal, EfCarDal>();
-            
+            //*****///BU Codelarý DependecyResolvers/Autofac te yaptýðýmýz için kapattýk
+            //services.AddSingleton<ICarService,CarManager>();//bana arakplanda bir refrans olustur. /Icerisnde data tutumuyorsak Singleton kullanýlýr
+            ////data olnalarda Add AddScoped, AddTransient kullanýlýr
+            //services.AddSingleton<ICarDal, EfCarDal>();
+
+            //services.AddSingleton<IRentalService, RentalManager>();
+            //services.AddSingleton<IRentalDal, EfRentalDal>();
+
+            //services.AddSingleton<IBrandService, BrandManager>();
+            //services.AddSingleton<IBrandDal, EfBrandDal>();
+
+            //services.AddSingleton<ICustomerDal, EfCustomerDal>();
+            //services.AddSingleton<ICustomerService, CustomerManager>();
+
+            //services.AddSingleton<IColorDal, EfColorDal>();
+            //services.AddSingleton<IColorService, ColorManager>();
+
+            //services.AddSingleton<IUserDal, EfUserDal>();
+            //services.AddSingleton<IUserService, UserManager>();
+
+
+
+
 
         }
 

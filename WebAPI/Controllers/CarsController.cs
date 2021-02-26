@@ -78,5 +78,29 @@ namespace WebAPI.Controllers
         }
         //güncelleme icin HttpPut, silme icin HttpDelete kullanılabilir fakat post da bu islemleri yapar
 
+        [HttpPost("update")]
+        public IActionResult Update(Car car)
+        {
+            var result = _carService.Update(car);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+
+        }
+
+        [HttpPost("delete")]
+        public IActionResult Delete(Car car)
+        {
+            var result = _carService.Delete(car);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+
+        }
+
     }
 }

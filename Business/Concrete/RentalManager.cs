@@ -29,7 +29,7 @@ namespace Business.Concrete
             }
 
             _rentalDal.Add(rental);
-            return new SuccessResult(Messages.CarAdded);
+            return new SuccessResult(Messages.RentalAdded);
         }
 
         public IResult Delete(Rental rental)
@@ -50,7 +50,7 @@ namespace Business.Concrete
                 return new ErrorDataResult<List<Rental>>(Messages.MaintenanceTime);
             }
            
-            return new SuccessDataResult<List<Rental>>(_rentalDal.GetAll(),Messages.RentalDeleted);
+            return new SuccessDataResult<List<Rental>>(_rentalDal.GetAll(),Messages.RentalListed);
         }
 
         public IDataResult<Rental> GetByCarId(int carId)
