@@ -39,7 +39,7 @@ namespace Business.Constants
         public static string RentalDeleted = "Rental SILINDI";
 
         public static string MaintenanceTime = "Bakım Zamanı";
-        
+        public static string DailyPriceInvalid="Günlük Ücret Hatası";
     }
 }
 

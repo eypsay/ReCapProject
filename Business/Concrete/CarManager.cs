@@ -1,9 +1,13 @@
 ﻿using Business.Abstract;
 using Business.Constants;
+using Business.ValidationRules.FluentValidation;
+using Core.Aspects.Autofac.Validation;
+using Core.CrossCuttingConcerns.Validation;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
 using Entities.DTOs;
+using FluentValidation;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -18,15 +22,33 @@ namespace Business.Concrete
         {
             _iCarDal = iCarDal;
         }
-
+        [ValidationAspect(typeof(CarValidator))]
         public IResult Add(Car car)
         {
             //urunu eklemeden once kurallar varsa buraya yazılır
             //add car icin bizim name alanı tabloda yoktu onun icin dec kısmını yazdım
-            if (car.Description.Length < 2)
-            {
-                return new ErrorResult(Messages.CarNameInvalid);
-            }
+            /////******Burası yerine CarVaiidationda yazdık
+            //if (car.Description.Length < 2)
+            //{
+            //    return new ErrorResult(Messages.CarNameInvalid);
+            //}
+
+            //if (car.DailyPrice < 0)
+            //{
+            //    return new ErrorResult(Messages.DailyPriceInvalid);
+            //}
+
+            ///buası validation yapacagımız zaman kullancagımız standart kodumuz
+            
+            //var context = new ValidationContext<Car>(car);
+            //CarValidator carValidator = new CarValidator();
+            //var result = carValidator.Validate(context);
+            //if (!result.IsValid)
+            //{
+            //    throw new ValidationException(result.Errors);
+            //}
+///***yukardaki codeları generic yaptık core kısmnıa validation seklinde ekledik
+        ///    ValidationTool.Validate(new CarValidator(), car); yuakrdaki [calidaitonaspecti] yazdığımız için comment ettik
             
             _iCarDal.Add(car);
 
